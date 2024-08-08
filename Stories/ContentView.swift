@@ -17,6 +17,7 @@ struct ContentView: View {
     var body: some View {
         if isLoggedIn {
             Text("Hello")
+            Button("Sign out", action: signOut)
         } else {
             VStack {
                 TextField("email", text: $email)
@@ -49,6 +50,16 @@ struct ContentView: View {
            
         }
     }
+    
+    func signOut() {
+            do {
+                try Auth.auth().signOut()
+                isLoggedIn = false
+                print("User signed out successfully")
+            } catch let signOutError as NSError {
+                print("Error signing out: %@", signOutError)
+            }
+        }
     
  
 }
