@@ -12,21 +12,29 @@ import FirebaseAuth
 struct ContentView: View {
     @State private var email = ""
     @State private var password = ""
+    @AppStorage("isLoggedIn") private var isLoggedIn: Bool = false
     
     var body: some View {
-        VStack {
-            TextField("email", text: $email)
-            TextField("Password", text: $password)
-            Button("signup", action: register)
-            Button("Login", action: login)
+        if isLoggedIn {
+            Text("Hello")
+        } else {
+            VStack {
+                TextField("email", text: $email)
+                TextField("Password", text: $password)
+                Button("signup", action: register)
+                Button("Login", action: login)
+            }
+            .padding()
         }
-        .padding()
     }
     
     func register() {
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let result = result {
                 print("Signed up!")
+            }
+            if let error = error {
+                print("\(error.localizedDescription)")
             }
         }
     }
@@ -35,7 +43,10 @@ struct ContentView: View {
         Auth.auth().signIn(withEmail: email, password: password) { result, error in
             if let result = result {
                 print("Logged In!")
+                isLoggedIn = true
             }
+            
+           
         }
     }
     
